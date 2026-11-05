@@ -105,7 +105,7 @@ if ss.df is None:
 c1, c2, c3, c4 = st.columns([2, 2, 2, 2])
 estados = c1.multiselect("Estados", L.ESTADOS, default=L.ABIERTOS, key="f_estados")
 dias_max = pd.to_numeric(ss.df["Días"], errors="coerce").max()
-dmax = max(60, int(dias_max) if pd.notna(dias_max) else 0)
+dmax = max(365, int(dias_max) if pd.notna(dias_max) else 0)
 dias_rango = c2.slider("Días desde el presupuesto", 0, dmax, (0, dmax), key="f_dias")
 texto = c3.text_input("Buscar (nombre, teléfono, población)", key="f_texto")
 sin_contactar = c4.checkbox("Solo los no contactados", key="f_sin")
