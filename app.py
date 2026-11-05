@@ -104,7 +104,8 @@ if ss.df is None:
 # ----------------------------------------------------------------------------- filtros
 c1, c2, c3, c4 = st.columns([2, 2, 2, 2])
 estados = c1.multiselect("Estados", L.ESTADOS, default=L.ABIERTOS, key="f_estados")
-dmax = max(60, int(ss.df["Días"].max() or 0))
+dias_max = pd.to_numeric(ss.df["Días"], errors="coerce").max()
+dmax = max(60, int(dias_max) if pd.notna(dias_max) else 0)
 dias_rango = c2.slider("Días desde el presupuesto", 0, dmax, (0, dmax), key="f_dias")
 texto = c3.text_input("Buscar (nombre, teléfono, población)", key="f_texto")
 sin_contactar = c4.checkbox("Solo los no contactados", key="f_sin")
@@ -170,7 +171,8 @@ with tab_cola:
             st.write(f"💶 {imp} + IVA ({L._eur(fila['Importe con IVA (€)'])} con IVA)")
             if fila["Opciones"]:
                 st.write(f"🔀 Varias opciones: {fila['Opciones']}")
-            st.write(f"🗓️ Hace **{fila['Días']} días** · Estado: **{fila['Estado']}**")
+            dias_txt = f"{int(fila['Días'])} días" if pd.notna(fila["Días"]) else "— días"
+            st.write(f"🗓️ Hace **{dias_txt}** · Estado: **{fila['Estado']}**")
             ult = fila["Último contacto"]
             st.write(f"✉️ Mensajes enviados: **{fila['Mensajes enviados']}**"
                      + (f" (último: {pd.Timestamp(ult).strftime('%d/%m')})" if pd.notna(ult) else ""))
